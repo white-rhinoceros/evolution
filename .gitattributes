@@ -1,0 +1,18 @@
+# Git будет обрабатывать файлы любым способом, который он сочтет наилучшим. Это хороший вариант по умолчанию.
+# * text=auto
+
+# Git всегда будет преобразовывать окончания строк в LF при переключении ветки. Вы должны использовать это для файлов,
+# которые должны сохранять LF-окончания, даже в Windows.
+* text eol=lf
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout.
+# *.rs text
+
+# Declare files that will always have LF (CRLF) line endings on checkout.
+# *.rs text eol=lf
+
+# Denote all files that are truly binary and should not be modified.
+*.png binary
+*.dll binary
+*.lib binary
