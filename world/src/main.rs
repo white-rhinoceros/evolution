@@ -36,28 +36,28 @@ fn main() {
         MAX_PLANT_GROW_ENERGY
     ).expect("Ошибка создания мира!");
 
-    // Заселение мира растениями и животными.
-    let mut plant = Plant::new(
-        MAX_PLANT_ENERGY,
-        MAX_PLANT_ENERGY,
-        PLANT_EATEN_ENERGY,
-        PLANT_REPRODUCE_ENERGY_RATE,
-        PLANT_NO_REPRO
-    );
-    world.add_plant(0, 0, plant).expect("Ячейка занята!");
-
-    let mut herb = Animal::<AnimalBrain>::new(
-        AnimaType::Herbivore,
-        ANIMAL_BIRTH_ENERGY,
-        MAX_ANIMAL_ENERGY,
-        ANIMAL_LIVE_ENERGY,
-        ANIMAL_EATEN_ENERGY_RATE,
-        ANIMAL_REPRODUCE_ENERGY_RATE,
-        ANIMAL_NO_REPRO,
-        AnimalDirection::North,
-        0,
-    );
-    world.add_animal(0, 1, herb).expect("Ячейка занята!");
+    // // Заселение мира растениями и животными.
+    // let mut plant = Plant::new(
+    //     MAX_PLANT_ENERGY,
+    //     MAX_PLANT_ENERGY,
+    //     PLANT_EATEN_ENERGY,
+    //     PLANT_REPRODUCE_ENERGY_RATE,
+    //     PLANT_NO_REPRO
+    // );
+    // world.add_plant(0, 0, plant).expect("Ячейка занята!");
+    //
+    // let mut herb = Animal::<AnimalBrain>::new(
+    //     AnimaType::Herbivore,
+    //     ANIMAL_BIRTH_ENERGY,
+    //     MAX_ANIMAL_ENERGY,
+    //     ANIMAL_LIVE_ENERGY,
+    //     ANIMAL_EATEN_ENERGY_RATE,
+    //     ANIMAL_REPRODUCE_ENERGY_RATE,
+    //     ANIMAL_NO_REPRO,
+    //     AnimalDirection::North,
+    //     0,
+    // );
+    // world.add_animal(0, 1, herb).expect("Ячейка занята!");
 
     let mut carn = Animal::<AnimalBrain>::new(
         AnimaType::Carnivore,
@@ -83,7 +83,7 @@ fn main() {
                 GRID_WIDTH,
                 GRID_HEIGHT,
                 receiver,
-                "D:/Projects/RustProjects/evolution",
+                "D:/Projects/RustroverProjects/evolution",
                 "Программа эволюция"
             ).expect("Ошибка создания экрана!");
         });
@@ -116,6 +116,6 @@ fn main() {
 
         let end = Utc::now().timestamp() as f64;
 
-        println!("Программа прорадотала {} минут(ы)", round((end - start)/60.0, 2));
+        println!("Программа проработала {} минут(ы)", round((end - start)/60.0, 2));
     }
 }

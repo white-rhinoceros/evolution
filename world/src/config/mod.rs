@@ -10,13 +10,13 @@ use crate::landscape::Energy;
 pub const SCREEN_TYPE: ScreenType = ScreenType::Tetra;
 
 /// Не отображать мир на экране. Должно быть true для реальных расчетов.
-pub const HEADLESS_MODE: bool = true;
+pub const HEADLESS_MODE: bool = false;
 
 
 // Настройки среды
 
 /// Максимальное количество итераций мира.
-pub const MAX_STEPS: usize = 100000; // 1000000
+pub const MAX_STEPS: usize = 10000; // 1000000
 
 /// Пошаговый режим
 //pub const STEP: bool = false;

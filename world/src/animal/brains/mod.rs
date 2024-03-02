@@ -5,10 +5,7 @@ pub(crate) mod simple;
 use crate::animal::{AnimalAction, AnimalInputSignal};
 
 /// Типаж, определяющий мозг животного.
-pub trait AnimalBrain {
-    /// Конструктор.
-    fn new() -> Self;
-
+pub trait AnimalBrain : Default {
     /// Действие агента (основной метод, определяющий поведение агента).
     fn action(&mut self, inputs: &AnimalInputSignal) -> AnimalAction;
 

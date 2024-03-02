@@ -25,7 +25,7 @@ pub enum AgentType {
 
 // Константы смещений, в зависимости от "взгляда" животного. Каждая константа хранят
 // массив кортежей смещения точек. Проходя по всем смещениям относительно текущего
-// положения  агента, мы обходим ту или иную область вокруг агента. Кортеж представляет
+// положения агента, мы обходим ту или иную область вокруг агента. Кортеж представляет
 // две точки: "x" и "y".
 //
 // Положительное направление оси "y" в низ. У оси "x" положительное направление
@@ -94,7 +94,7 @@ fn create_landscape_matrix<C>(width: usize, height: usize) -> Vec<Vec<C>>
             height_container.push(cell);
         }
 
-        width_container .push(height_container);
+        width_container.push(height_container);
     }
 
     width_container
@@ -109,7 +109,7 @@ fn create_landscape_matrix<C>(width: usize, height: usize) -> Vec<Vec<C>>
 /// returns: Vec<(i8, i8)>
 fn randomize_coord_vector(mut array: Vec<(i8, i8)>) -> Vec<(i8, i8)> {
     array.sort_unstable_by(|_, _| {
-        let num = rand::thread_rng().gen_range(0..2);
+        let num = thread_rng().gen_range(0..2);
         if num == 1 {
             Ordering::Greater
         } else {
@@ -170,9 +170,9 @@ pub struct Landscape {
     animals: Vec<Box<dyn AnimalAlive>>,
     // Массив растений.
     plants: Vec<Box<dyn PlantAlive>>,
-    // Умершие животные. Растение погибнуть не может - оно может вырасти заного.
-    // TODO: Возможно стоит расмотреть варианты с погибшими растениями, востановление
-    // TODO: популяции которых рпроисходит только при размножении.
+    // Умершие животные. Растение погибнуть не может - оно может вырасти заново.
+    // TODO: Возможно стоит рассмотреть варианты с погибшими растениями, восстановление
+    // TODO: популяции которых происходит только при размножении.
     dead_animals: Vec<*mut dyn AnimalAlive>,
 
     // Среда. Точки среды - ячейки.
@@ -304,7 +304,7 @@ impl Landscape {
     /// * `coord`: Координата местоположения (x или y). Может быть отрицательной.
     /// * `max_size`: Максимальный размер мира по соответствующей координате.
     ///
-    /// returns: Координата в границах мира.
+    /// Returns: Координата в границах мира.
     fn clip(coord: isize, max_size: usize) -> usize {
         // Конвертируем параметры в тип со знаком.
         let max_size: isize = max_size as isize;
@@ -332,7 +332,7 @@ impl Landscape {
     ///
     /// * `t`: Изменяемый указатель на тип T.
     ///
-    /// returns: &T
+    /// Returns: &T
     fn get_agent_ref<'a, T: ?Sized>(t: *mut T) -> &'a T {
         unsafe {
             t.as_ref().expect("Обнаружен нулевой указатель на агента")
@@ -346,7 +346,7 @@ impl Landscape {
     ///
     /// * `t`: Изменяемый указатель на тип T.
     ///
-    /// returns: &mut T
+    /// Returns: &mut T
     fn get_agent_mut<'a, T: ?Sized>(t: *mut T) -> &'a mut T {
         unsafe {
             t.as_mut().expect("Обнаружен нулевой указатель на агента")
@@ -419,7 +419,7 @@ impl Landscape {
 
         match agent_type {
             AgentType::Plant => {
-                // Просматриваем все ячейки но в случайном порядке.
+                // Просматриваем все ячейки, но в случайном порядке.
                 for test_x in &self.shuffle_width {
                     for test_y in &self.shuffle_height {
                         if let PlantInCell::None = self.landscape[*test_x][*test_y].plant {
@@ -429,7 +429,7 @@ impl Landscape {
                     }
                 }
 
-                // Врядли жто случится, но если все ячейки заняты...
+                // Вряд ли это случится, но если все ячейки заняты...
                 return Err(RecoverableError::new(fmt::format(format_args!(
                     "Не удалось найти свободное место для растения"
                 ))));
@@ -444,7 +444,7 @@ impl Landscape {
                     }
                 }
 
-                // Врядли жто случится, но если все ячейки заняты...
+                // Вряд ли жто случится, но если все ячейки заняты...
                 panic!("По каким-то причинам, в мире закончилось место для новых животных!");
             }
         }
@@ -554,7 +554,7 @@ impl Landscape {
 
     /// Одна симуляция всего мира.
     pub fn tick(&mut self) {
-        // Перед каждой итерацией тосуем вектора координат. Т.к. сложность алгоритма тосовки
+        // Перед каждой итерацией тасуем вектора координат. Т.к. сложность алгоритма тасовки
         // составляет 2*N, то это не представляет особых проблем с производительностью.
         self.shuffle_width.shuffle(&mut thread_rng());
         self.shuffle_height.shuffle(&mut thread_rng());
@@ -585,7 +585,7 @@ impl Landscape {
 
                         // Проверяем обработанность животного.
                         // Возможно животное уже сделало "свой ход". Как такое возможно, что в новь
-                        // обрабатываемая точка уже создержит животное сделавшее свой ход? Рассмотрим
+                        // обрабатываемая точка уже содержит животное сделавшее свой ход? Рассмотрим
                         // пример: текущая итерация обрабатывает точку (1, 1). Животное перемещается
                         // в точку (1, 2). Когда итерация дойдет до точки (1, 2) животное повторно
                         // совершит свое действие, что неверно.
@@ -620,7 +620,7 @@ impl Landscape {
     /// * `x`: "x" координата симулируемого растения.
     /// * `y`: "y" координата симулируемого растения.
     ///
-    /// returns: ()
+    /// Returns: ()
     fn simulate_plant(&mut self, plant: &mut dyn PlantAlive, x: usize, y: usize) {
         // Получаем то, что хочет растение.
         let action = plant.action();
@@ -634,7 +634,7 @@ impl Landscape {
             PlantAction::Grow => {
                 self.grow_plant_action(plant, x, y);
             }
-            // Растение решило размножится (рассыпать семена).
+            // Растение решило размножиться (рассыпать семена).
             PlantAction::Reproduce => {
                 self.reproduce_plant_action(plant, x, y);
             }
@@ -657,11 +657,11 @@ impl Landscape {
     ///
     /// # Arguments
     ///
-    /// * `plant`:  Изменяемая ссылка на текущее, симулируемое растение.
+    /// * `plant`: Изменяемая ссылка на текущее, симулируемое растение.
     /// * `_x`: "x" координата симулируемого растения.
     /// * `_y`: "y" координата симулируемого растения.
     ///
-    /// returns: ()
+    /// Returns: ()
     fn reproduce_plant_action(&mut self, plant: &mut dyn PlantAlive, _x: usize, _y: usize) {
         let spot = self.find_empty_spot(AgentType::Plant);
 
@@ -672,7 +672,7 @@ impl Landscape {
                 self.add_plant(coord.0, coord.1, new_plant)
                     .expect("Не удалось добавить растение");
             }
-            // Не удалось найти свободную ячейку.. Пропускаем..
+            // Не удалось найти свободную ячейку... Пропускаем...
             Err(_) => {}
         }
     }
@@ -722,7 +722,7 @@ impl Landscape {
 
     /// Животное "должно посмотреть по сторонам" (по соответствующим областям в зависимости
     /// от направления) и заполнить структуру содержащую переменные входных сигналов для
-    /// мозга животного. Животное витдит текущее состояние мира, т.е. остальные агенты
+    /// мозга животного. Животное видит текущее состояние мира, т.е. остальные агенты
     /// могли у этому моменту сделать свой шаг, а некоторые еще ждут своей очереди.
     ///
     /// TODO: В дальнейшем планирую использовать "карту восприятия", матрицу
@@ -854,7 +854,7 @@ impl Landscape {
     /// * `x`: Координата "x" точки относительно которой ищутся агенты.
     /// * `y`: Координата "y" точки относительно которой ищутся агенты.
     ///
-    /// returns: (usize, usize, usize) - количество растений, травоядных, хищников.
+    /// Returns: (usize, usize, usize) - количество растений, травоядных, хищников.
     fn count_agents_in_area(&self, offsets: &[(i8, i8)], x: usize, y: usize) -> (usize, usize, usize) {
         let mut plants: usize = 0;
         let mut herbivores: usize = 0;
@@ -960,7 +960,7 @@ impl Landscape {
     /// * `x`: Положение животного по "x".
     /// * `y`: Положение животного по "y".
     ///
-    /// returns: ()
+    /// Returns: ()
     fn eating_animal_action(&self, animal: &mut dyn AnimalAlive, x: usize, y: usize) {
         match animal.get_type() {
             // Травоядное ест траву
@@ -982,7 +982,7 @@ impl Landscape {
 
                 match coord {
                     None => {
-                        panic!("Не найдена трава, которую видело травоядное");
+                        println!("Травоядное очень тупое, пытается съесть ничего!");
                     }
                     Some(coord) => {
                         // Получить растение по координатам
@@ -1014,7 +1014,7 @@ impl Landscape {
 
                 match coord {
                     None => {
-                        panic!("Не найдено травоядное, которого видел хищник");
+                        println!("Хищник очень туп и пытается съесть несуществующее травоядное!");
                     }
                     Some(coord) => {
                         // Получить растение по координатам
@@ -1177,7 +1177,7 @@ impl Landscape {
                     // check to see if the agent has lived longer than any other agent
                     // of the particular type.
                     if animal.is_dead() {
-                        // Отправляем животное а рай.
+                        // Отправляем животное в рай.
                         self.send_to_heaven(ptr, x, y);
 
                         if animal.is_eaten() {
@@ -1250,7 +1250,7 @@ impl Landscape {
                 match self.best_death_animal.0 {
                     AnimalInCell::Animal(best_death_animal_ptr) => {
                         // Т.к. в этой ячейке точно не может быть текущего агента,
-                        // текущий только что умер.. Получим ссылку на лучшего агента.
+                        // текущий только что умер... Получим ссылку на лучшего агента.
                         let best_death_animal =  Self::get_agent_ref(best_death_animal_ptr);
 
                         // Только что умерший агент жил дольше всех.
@@ -1268,7 +1268,7 @@ impl Landscape {
                 match self.best_death_animal.1 {
                     AnimalInCell::Animal(best_death_animal_ptr) => {
                         // Т.к. в этой ячейке точно не может быть текущего агента,
-                        // текущий только что умер.. Получим ссылку на лучшего агента.
+                        // текущий только что умер... Получим ссылку на лучшего агента.
                         let best_death_animal =  Self::get_agent_ref(best_death_animal_ptr);
 
                         // Только что умерший агент жил дольше всех.

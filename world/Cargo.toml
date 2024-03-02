@@ -6,11 +6,16 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-display = { path = "../display" }
+display = {path = "../display"}
+
 # Линейная алгебра для "мозга"
-ndarray = {version = "0.15.6"}
-rand = "0.8"
+nalgebra = { version = "0.32.4", features = ["rand"] }
+
 # Получение меток времени
 chrono = { version = "0.4.31", features = [] }
+
 # Округление чисел
 round = "0.1.0"
+
+# Прочие крейты
+rand = "0.8"

@@ -1,12 +1,16 @@
 //! "Простой мозг" животного.
+//! TODO: Попробовать расширить нейронку до 5 выходных значений (+ None).
 
-extern crate ndarray;
+extern crate nalgebra;
+use nalgebra::{SVector, SMatrix};
+
 
 use crate::animal::brains::AnimalBrain;
 use crate::animal::{AnimalAction, AnimalInputSignal};
-use ndarray::prelude::*;
 
-type UseType = u8;
+use rand::Rng;
+
+type WeightType = f32;
 
 /// Константа, определяющая размер "вектора" входных сигналов.
 const INPUT_VECTOR_SIZE: usize = 12;
@@ -16,68 +20,75 @@ const OUTPUT_VECTOR_SIZE: usize = 4;
 
 /// Структура, реализующая мозг агента.
 pub struct Brain {
-    inputs: Array1<UseType>,   // Входной вектор сигналов.
-    weights: Array2<UseType>,  // Матрица весов.
-    bias: Array1<UseType>,     // Вектор смещений.
-    actions: Array1<UseType>,  // Вектор выходных сигналов.
+    // Матрица весов.
+    weights: SMatrix::<WeightType, OUTPUT_VECTOR_SIZE, INPUT_VECTOR_SIZE>,
+    // Вектор смещений.
+    bias: SVector::<WeightType, OUTPUT_VECTOR_SIZE>,
 }
 
 impl Brain {
-    fn get_weight() -> UseType {
-        todo!()
+    /// Генерация случайного веса для нейросети.
+    /// Результат принадлежит диапазону [-1, 1].
+    fn generate_weight() -> WeightType {
+        rand::thread_rng().gen_range(-1.0..=1.0)
+    }
+}
+
+impl Default for Brain {
+    /// Мозг по умолчанию (заполняется случайными значениями).
+    fn default() -> Self {
+        Brain {
+            weights: SMatrix::new_random(),
+            bias: SVector::new_random(),
+        }
     }
 }
 
 impl AnimalBrain for Brain {
-    /// Конструктор.
-    fn new() -> Brain {
-        let inputs = Array::<UseType, _>::zeros(INPUT_VECTOR_SIZE.f());
-        let weights = Array::<UseType, _>::zeros((INPUT_VECTOR_SIZE, OUTPUT_VECTOR_SIZE).f());
-        let bias = Array::<UseType, _>::zeros(OUTPUT_VECTOR_SIZE.f());
-        let actions = Array::<UseType, _>::zeros(OUTPUT_VECTOR_SIZE.f());
+    /// Действие агента.
+    fn action(&mut self, percept: &AnimalInputSignal) -> AnimalAction {
 
-        Brain {
-            inputs,
-            weights,
-            bias,
-            actions,
+        let mut inputs = SVector::<WeightType, INPUT_VECTOR_SIZE>::zeros();
+        // Конвертируем восприятие животного во входной вектор.
+        inputs[0]  = percept.plant_front as WeightType;
+        inputs[1]  = percept.plant_left as WeightType;
+        inputs[2]  = percept.plant_right as WeightType;
+        inputs[3]  = percept.plant_proximity as WeightType;
+
+        inputs[4]  = percept.herbivore_front as WeightType;
+        inputs[5]  = percept.herbivore_left as WeightType;
+        inputs[6]  = percept.herbivore_right as WeightType;
+        inputs[7]  = percept.herbivore_proximity as WeightType;
+
+        inputs[8]  = percept.carnivore_front as WeightType;
+        inputs[9]  = percept.carnivore_left as WeightType;
+        inputs[10] = percept.carnivore_right as WeightType;
+        inputs[11] = percept.carnivore_proximity as WeightType;
+
+        // Подсчитаем выходные значения.
+        let actions = self.bias + self.weights * inputs;
+        let mut largest: WeightType = Default::default();
+        let mut out: usize = 0;
+
+        // Select the largest node (winner-takes-all network).
+        for (index, action) in actions.iter().enumerate() {
+            if *action > largest {
+                largest = *action;
+                out = index;
+            }
+        }
+
+        match out {
+            0 => AnimalAction::TurnLeft,
+            1 => AnimalAction::TurnRight,
+            2 => AnimalAction::Move,
+            3 => AnimalAction::Eat,
+            _ => AnimalAction::None,
         }
     }
 
-    /// Действие агента.
-    fn action(&mut self, _inputs: &AnimalInputSignal) -> AnimalAction {
-        // /* Forward propagate the inputs through the neural network */
-        // for ( out = 0 ; out < MAX_OUTPUTS ; out++ ) {
-        //
-        //     /* Initialize the output node with the bias */
-        //     agent->actions[out] = agent->biaso[out];
-        //
-        //     /* Multiply the inputs by the weights for this output node */
-        //     for ( in = 0 ; in < MAX_INPUTS ; in++ ) {
-        //
-        //         agent->actions[out] +=
-        //             ( agent->inputs[in] * agent->weight_oi[(out * MAX_INPUTS)+in] );
-        //
-        //     }
-        //
-        // }
-        //
-        // largest = -9;
-        // winner = -1;
-        //
-        // /* Select the largest node (winner-takes-all network) */
-        // for ( out = 0 ; out < MAX_OUTPUTS ; out++ ) {
-        //     if (agent->actions[out] >= largest) {
-        //         largest = agent->actions[out];
-        //         winner = out;
-        //     }
-        // }
-
-
-
-        AnimalAction::Move
-    }
-
+    /// Клонировать мозг с мутацией одного веса. Вес выбирается случайно,
+    /// как и значение.
     fn clone_with_mutation(&self) -> Self {
         todo!()
     }
