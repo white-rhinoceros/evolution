@@ -2,15 +2,11 @@
 
 use crate::animal::brains::simple::Brain as AnimalBrain;
 use crate::animal::species::simple::Animal;
-use crate::plant::simple::Plant;
-
 // Настройки
 use crate::config::*;
 
 use std::sync::mpsc::channel;
-use std::thread::{JoinHandle, spawn};
-use std::time::Duration;
-
+use std::thread::spawn;
 use crate::animal::{AnimalDirection, AnimaType};
 use crate::landscape::Landscape;
 
@@ -21,7 +17,6 @@ mod plant;
 mod config;
 mod landscape;
 mod errors;
-mod init;
 
 fn main() {
     println!("Программа \"Эволюция\"");

@@ -1,6 +1,8 @@
 use display::ScreenType;
 use crate::landscape::Energy;
 
+pub mod init;
+
 // Настройки программы.
 
 /// Рабочая директория
@@ -10,7 +12,7 @@ use crate::landscape::Energy;
 pub const SCREEN_TYPE: ScreenType = ScreenType::Tetra;
 
 /// Не отображать мир на экране. Должно быть true для реальных расчетов.
-pub const HEADLESS_MODE: bool = true;
+pub const HEADLESS_MODE: bool = false;
 
 
 // Настройки среды
@@ -67,7 +69,7 @@ pub const MAX_ANIMAL_ENERGY: Energy = 60.;
 pub const ANIMAL_BIRTH_ENERGY: Energy = 25.;
 
 // Энергия, которую теряет животное, что-бы жить.
-pub const ANIMAL_LIVE_ENERGY: Energy = 0.0;
+pub const ANIMAL_LIVE_ENERGY: Energy = 0.005;
 
 // Какую часть от энергии съеденного животного получит хищник.
 pub const ANIMAL_EATEN_ENERGY_RATE: f64 = 0.3;
