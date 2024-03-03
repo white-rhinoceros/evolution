@@ -13,7 +13,7 @@ use display::{CellStuff, Map};
 
 
 /// Тип представляющий энергию живого существа
-pub type Energy = i32;
+pub type Energy = f32;
 
 /// Тип агента.
 #[derive(Copy, Clone)]
@@ -981,9 +981,6 @@ impl Landscape {
                 };
 
                 match coord {
-                    None => {
-                        println!("Травоядное очень тупое, пытается съесть ничего!");
-                    }
                     Some(coord) => {
                         // Получить растение по координатам
                         if let PlantInCell::Plant(plant) = self.landscape[coord.0][coord.1].plant {
@@ -991,6 +988,9 @@ impl Landscape {
 
                             animal.eat_action(plant.be_eaten());
                         }
+                    }
+                    None => {
+                        // Есть нечего: животное ошиблось.
                     }
                 }
 
@@ -1013,9 +1013,6 @@ impl Landscape {
                 };
 
                 match coord {
-                    None => {
-                        println!("Хищник очень туп и пытается съесть несуществующее травоядное!");
-                    }
                     Some(coord) => {
                         // Получить растение по координатам
                         if let AnimalInCell::Animal(herb) = self.landscape[coord.0][coord.1].animal {
@@ -1027,6 +1024,9 @@ impl Landscape {
 
                             animal.eat_action(herb.be_eaten());
                         }
+                    }
+                    None => {
+                        // Есть нечего: животное ошиблось.
                     }
                 }
             }

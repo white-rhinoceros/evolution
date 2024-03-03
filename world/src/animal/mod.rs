@@ -22,6 +22,7 @@ pub enum AnimalAction {
     Reproduce,    // Размножение.
     None,         // Нет действия (животное что-то ждет).
 }
+const MAX_ACTIONS: usize = 6;
 
 /// Перечисление, определяющее текущие направление животного.
 #[derive(Copy, Clone)]

@@ -116,6 +116,6 @@ fn main() {
 
         let end = Utc::now().timestamp() as f64;
 
-        println!("Программа проработала {} минут(ы)", round((end - start)/60.0, 2));
+        println!("Программа проработала {} минут(ы)", round((end - start)/60.0, 4));
     }
 }

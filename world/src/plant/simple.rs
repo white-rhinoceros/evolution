@@ -59,7 +59,7 @@ impl PlantAlive for Plant {
 
     /// Съедено ли растение?
     fn is_eaten(&self) -> bool {
-        if self.energy <= 0 {
+        if self.energy <= 0 as Energy {
             return true;
         }
 
@@ -98,7 +98,7 @@ impl PlantAlive for Plant {
     /// Действие "размножение растения".
     fn reproduce_action(&mut self) -> Box<dyn PlantAlive> {
         Box::new(Plant {
-            energy: 0, // Семечко не имеет энергии и должно прорасти в растение.
+            energy: 0 as Energy, // Семечко не имеет энергии и должно прорасти в растение.
             max_energy: self.max_energy,
             eaten_energy: self.eaten_energy,
             reproduce_energy_rate: self.reproduce_energy_rate,
@@ -121,7 +121,7 @@ impl PlantAlive for Plant {
             self.eaten_energy
         } else {
             let rest = self.energy;
-            self.energy = 0;
+            self.energy = 0 as Energy;
 
             rest
         }

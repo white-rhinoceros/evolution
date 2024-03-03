@@ -10,13 +10,13 @@ use crate::landscape::Energy;
 pub const SCREEN_TYPE: ScreenType = ScreenType::Tetra;
 
 /// Не отображать мир на экране. Должно быть true для реальных расчетов.
-pub const HEADLESS_MODE: bool = false;
+pub const HEADLESS_MODE: bool = true;
 
 
 // Настройки среды
 
 /// Максимальное количество итераций мира.
-pub const MAX_STEPS: usize = 10000; // 1000000
+pub const MAX_STEPS: usize = 1000; // 1000000
 
 /// Пошаговый режим
 //pub const STEP: bool = false;
@@ -39,17 +39,17 @@ pub const MAX_HERBIVORE: usize = 18;
 pub const MAX_CARNIVORE: usize = 18;
 
 /// Максимальная энергия которую может получить растение на каждой итерации.
-pub const MAX_PLANT_GROW_ENERGY: Energy = 5;
+pub const MAX_PLANT_GROW_ENERGY: Energy = 5.;
 
 
 
 // Настройки растений
 
 /// Максимальная энергия которую может иметь растение.
-pub const MAX_PLANT_ENERGY: Energy = 15;
+pub const MAX_PLANT_ENERGY: Energy = 15.;
 
 /// Максимальная энергия, которую может получить животное при поедании растения.
-pub const PLANT_EATEN_ENERGY: Energy = 15;
+pub const PLANT_EATEN_ENERGY: Energy = 15.;
 
 /// Константа определяет благоприятные условия для размножения животного.
 pub const PLANT_REPRODUCE_ENERGY_RATE: f64 = 0.5;
@@ -61,15 +61,15 @@ pub const PLANT_NO_REPRO: bool = true;
 // Настройки животных
 
 // Максимальная энергия которую может иметь животное.
-pub const MAX_ANIMAL_ENERGY: Energy = 60;
+pub const MAX_ANIMAL_ENERGY: Energy = 60.;
 
-// Энергия которую получает животное при рождении (и теряет размножающееся животное).
-pub const ANIMAL_BIRTH_ENERGY: Energy = 25;
+// Энергия, которую получает животное при рождении (и теряет размножающееся животное).
+pub const ANIMAL_BIRTH_ENERGY: Energy = 25.;
 
-// Энергия которую теряет животное, что-бы жить.
-pub const ANIMAL_LIVE_ENERGY: Energy = 0;
+// Энергия, которую теряет животное, что-бы жить.
+pub const ANIMAL_LIVE_ENERGY: Energy = 0.0;
 
-// Какую часть от энергии убитого животного получит хищник.
+// Какую часть от энергии съеденного животного получит хищник.
 pub const ANIMAL_EATEN_ENERGY_RATE: f64 = 0.3;
 
 // Константа определяет благоприятные условия для размножения животного. Т.е. как только,

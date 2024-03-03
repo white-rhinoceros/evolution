@@ -105,7 +105,7 @@ impl<B: AnimalBrain + 'static> AnimalAlive for Animal<B> {
     // Методы получения состояния животного.
 
     fn is_dead(&self) -> bool {
-        if self.energy <= 0 {
+        if self.energy <= 0 as Energy {
             return true;
         }
 
@@ -145,6 +145,7 @@ impl<B: AnimalBrain + 'static> AnimalAlive for Animal<B> {
     fn action(&mut self, inputs: &AnimalInputSignal) -> AnimalAction {
         // Животное прожило еще одну итерацию.
         self.age += 1;
+
         // Животное совершило "свой ход".
         self.processed = true;
 
@@ -262,7 +263,7 @@ impl<B: AnimalBrain + 'static> AnimalAlive for Animal<B> {
             let energy =  (self.eaten_energy_rate * self.energy as f64) as Energy;
 
             // Обнуляем энергию (травоядное погибло).
-            self.energy = 0;
+            self.energy = 0 as Energy;
 
             // Показываем от чего именно умерло животное.
             self.is_eaten = true;
@@ -273,7 +274,7 @@ impl<B: AnimalBrain + 'static> AnimalAlive for Animal<B> {
             energy
         } else {
             // Хищника вообще съесть нельзя.
-            0
+            0 as Energy
         }
     }
 }
